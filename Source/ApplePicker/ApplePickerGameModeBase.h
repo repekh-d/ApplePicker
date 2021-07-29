@@ -14,4 +14,6 @@ class APPLEPICKER_API AApplePickerGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	AApplePickerGameModeBase();
 };
