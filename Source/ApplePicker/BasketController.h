@@ -13,5 +13,17 @@ UCLASS()
 class APPLEPICKER_API ABasketController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY()
+	class ABasketPawn* Basket;
+
+	ABasketController();
+
+	virtual void SetupInputComponent() override;
+	void Move(float MoveIntensity);
+
+protected:
+	void virtual Tick(float DeltaTime) override;
+	void virtual BeginPlay() override;
 };

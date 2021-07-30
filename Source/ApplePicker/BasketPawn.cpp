@@ -4,11 +4,29 @@
 #include "BasketPawn.h"
 
 // Sets default values
-ABasketPawn::ABasketPawn()
+ABasketPawn::ABasketPawn() :
+	MaxSpeed(3000.f)
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Structure to hold one-time initialization
+	struct FConstructorStatics
+	{
+		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> Mesh;
+		FConstructorStatics() :
+			Mesh(TEXT("/Game/Models/Basket.Basket"))
+		{
+		}
+	};
+	static FConstructorStatics ConstructorStatics;
+
 	PrimaryActorTick.bCanEverTick = true;
 
+	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy"));
+	RootComponent = DummyRoot;
+
+	// Create static mesh component
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->SetStaticMesh(ConstructorStatics.Mesh.Get());
+	Mesh->SetupAttachment(DummyRoot);
 }
 
 // Called when the game starts or when spawned
@@ -22,13 +40,6 @@ void ABasketPawn::BeginPlay()
 void ABasketPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ABasketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 

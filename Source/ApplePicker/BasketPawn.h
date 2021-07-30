@@ -11,7 +11,16 @@ class APPLEPICKER_API ABasketPawn : public APawn
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
+	class USceneComponent* DummyRoot;
+
+	UPROPERTY()
+	class UStaticMeshComponent* Mesh;
+
 public:
+	UPROPERTY()
+	float MaxSpeed;
+
 	// Sets default values for this pawn's properties
 	ABasketPawn();
 
@@ -22,8 +31,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
