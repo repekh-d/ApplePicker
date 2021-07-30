@@ -18,10 +18,14 @@ class APPLEPICKER_API AAppleTree : public AActor
 	class UStaticMeshComponent* Mesh;
 
 	float MovementDirection;
+	float RemainsTillDrop;
 
 public:
 	UPROPERTY(EditAnywhere)
 	float MovementSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float DropInterval;
 	
 public:	
 	// Sets default values for this actor's properties

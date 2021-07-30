@@ -10,8 +10,20 @@ UCLASS()
 class APPLEPICKER_API AApple : public AActor
 {
 	GENERATED_BODY()
+
+	UPROPERTY()
+	class USceneComponent* DummyRoot;
+
+	UPROPERTY()
+	class UStaticMeshComponent* Mesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* CollisionVolume;
 	
-public:	
+public:
+	UPROPERTY(EditAnywhere)
+	float FallSpeed;
+
 	// Sets default values for this actor's properties
 	AApple();
 
@@ -22,5 +34,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };

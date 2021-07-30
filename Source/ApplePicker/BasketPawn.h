@@ -15,7 +15,10 @@ class APPLEPICKER_API ABasketPawn : public APawn
 	class USceneComponent* DummyRoot;
 
 	UPROPERTY()
-	class UStaticMeshComponent* Mesh;
+	TArray<class UStaticMeshComponent*> Mesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* CollisionVolume;
 
 public:
 	UPROPERTY()
@@ -27,9 +30,21 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OnBeginOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+	
+	void InitBaskets();
+	void RemoveBasket();
+	int BasketsLeft();
 };

@@ -23,6 +23,9 @@ class APPLEPICKER_API AApplePickerGameModeBase : public AGameModeBase
 public:
 	AApplePickerGameModeBase();
 
+	void MissedApple();
+	void CollectedApple();
+
 protected:
 	virtual void BeginPlay() override;
 };

@@ -6,6 +6,7 @@
 #include "BasketController.h"
 #include "AppleTree.h"
 
+#define PRINT(...) GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(__VA_ARGS__));
 
 AApplePickerGameModeBase::AApplePickerGameModeBase()
 {
@@ -22,4 +23,14 @@ void AApplePickerGameModeBase::BeginPlay()
 		return;
 	BasketPawn->SetActorLocation(FVector(0.f, 0.f, -2700.f));
 	BasketPawn->SetActorScale3D(FVector(3.f, 3.f, 3.f));
+}
+
+void AApplePickerGameModeBase::MissedApple()
+{
+	BasketPawn->RemoveBasket();
+}
+
+void AApplePickerGameModeBase::CollectedApple()
+{
+	// TODO	
 }
