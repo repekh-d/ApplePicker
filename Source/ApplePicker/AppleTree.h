@@ -10,6 +10,18 @@ UCLASS()
 class APPLEPICKER_API AAppleTree : public AActor
 {
 	GENERATED_BODY()
+
+	UPROPERTY()
+	class USceneComponent* DummyRoot;
+
+	UPROPERTY()
+	class UStaticMeshComponent* Mesh;
+
+	float MovementDirection;
+
+public:
+	UPROPERTY(EditAnywhere)
+	float MovementSpeed;
 	
 public:	
 	// Sets default values for this actor's properties

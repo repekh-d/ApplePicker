@@ -13,7 +13,16 @@ UCLASS()
 class APPLEPICKER_API AApplePickerGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+
+	UPROPERTY()
+	class AAppleTree* AppleTree;
+
+	UPROPERTY()
+	class ABasketPawn* BasketPawn;
 	
 public:
 	AApplePickerGameModeBase();
+
+protected:
+	virtual void BeginPlay() override;
 };
