@@ -29,6 +29,7 @@ void AApplePickerGameModeBase::BeginPlay()
 void AApplePickerGameModeBase::MissedApple()
 {
 	BasketPawn->RemoveBasket();
+
 	auto Info = NewObject<UBattleLogEntryInfo>(this, InfoClass);
 	Info->Action = TEXT("Miss");
 	Info->Missed = true;
@@ -41,4 +42,9 @@ void AApplePickerGameModeBase::CollectedApple()
 	Info->Action = TEXT("Catch");
 	Info->Missed = false;
 	OnNewAction.Broadcast(Info);
+}
+
+void AApplePickerGameModeBase::RestartGame()
+{
+	BasketPawn->InitBaskets();
 }

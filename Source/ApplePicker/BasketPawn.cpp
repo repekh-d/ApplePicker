@@ -13,17 +13,25 @@ ABasketPawn::FConstructorStatics ABasketPawn::ConstructorStatics;
 ABasketPawn::ABasketPawn() :
 	MaxSpeed(3000.f)
 {
-	ConstructorStatics.Get();
+	ConstructorStatics.Init();
 	PrimaryActorTick.bCanEverTick = true;
 
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy"));
 	RootComponent = DummyRoot;
 
-	InitBaskets();
-
 	CollisionVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Volume"));
 	CollisionVolume->SetupAttachment(RootComponent);
 	CollisionVolume->SetCollisionResponseToAllChannels(ECR_Overlap);
+
+	for (size_t i = Mesh.Num(); i < 3; ++i)
+	{
+		static int count = 0;
+		FString MeshName = TEXT("Mesh") + FString::FromInt(count++);
+		Mesh.Add(CreateDefaultSubobject<UStaticMeshComponent>(FName(MeshName)));
+		Mesh.Top()->SetStaticMesh(ConstructorStatics.Mesh.Get());
+		Mesh.Top()->SetupAttachment(CollisionVolume);
+		Mesh.Top()->AddLocalOffset(FVector(0.f, 0.f, i * 100.f));
+	}
 
 	DestructionTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DestructionTimeline"));
 }
@@ -33,7 +41,8 @@ void ABasketPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CollisionVolume->InitBoxExtent(GetComponentsBoundingBox().GetExtent());
+	CollisionVolume->SetBoxExtent(GetComponentsBoundingBox().GetExtent());
+	//CollisionVolume->UpdateBounds();
 	CollisionVolume->OnComponentBeginOverlap.AddDynamic(this, &ABasketPawn::OnBeginOverlap);
 
 	// Init dynamic materials
@@ -54,9 +63,17 @@ void ABasketPawn::BeginPlay()
 	// Bind timeline finish function
 	FinishFunction.BindLambda([this]()
 	{
-		if (this->Mesh.Num() > 0)
+		if (Mesh.Num() > 0)
 		{
-			this->Mesh.Pop()->DestroyComponent();
+			Mesh.Pop()->DestroyComponent();
+		}
+		if (Mesh.Num() == 0)
+		{
+			AApplePickerGameModeBase* GameMode = Cast<AApplePickerGameModeBase>(GetWorld()->GetAuthGameMode());
+			if (GameMode)
+			{
+				GameMode->RestartGame();
+			}
 		}
 	});
 	DestructionTimeline->SetTimelineFinishedFunc(FinishFunction);
@@ -96,10 +113,14 @@ void ABasketPawn::InitBaskets()
 	{
 		static int count = 0;
 		FString MeshName = TEXT("Mesh") + FString::FromInt(count++);
-		Mesh.Add(CreateDefaultSubobject<UStaticMeshComponent>(FName(MeshName)));
+		Mesh.Add(NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass(), FName(MeshName)));
+		Mesh.Top()->RegisterComponent();
+		Mesh.Top()->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		Mesh.Top()->SetStaticMesh(ConstructorStatics.Mesh.Get());
-		Mesh.Top()->SetupAttachment(RootComponent);
 		Mesh.Top()->AddLocalOffset(FVector(0.f, 0.f, i * 100.f));
+
+		UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(ConstructorStatics.Material.Get(), this);
+		Mesh.Top()->SetMaterial(0, DynMaterial);
 	}
 }
 

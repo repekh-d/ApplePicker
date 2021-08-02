@@ -37,6 +37,8 @@ public:
 	void MissedApple();
 	void CollectedApple();
 
+	void RestartGame();
+
 protected:
 	virtual void BeginPlay() override;
 };

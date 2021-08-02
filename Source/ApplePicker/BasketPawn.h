@@ -25,7 +25,7 @@ class APPLEPICKER_API ABasketPawn : public APawn
 			BasketDestructionCurve(TEXT("/Game/Blueprints/BasketDestructionCurve.BasketDestructionCurve"))
 		{
 		}
-		void Get()
+		void Init()
 		{
 			Mesh.Get();
 			Material.Get();
@@ -38,7 +38,7 @@ class APPLEPICKER_API ABasketPawn : public APawn
 	class USceneComponent* DummyRoot;
 
 	// Mesh
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<class UStaticMeshComponent*> Mesh;
 
 	// Collision bounding box
