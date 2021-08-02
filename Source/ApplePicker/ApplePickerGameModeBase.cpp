@@ -6,7 +6,6 @@
 #include "BasketController.h"
 #include "AppleTree.h"
 
-#define PRINT(...) GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(__VA_ARGS__));
 
 AApplePickerGameModeBase::AApplePickerGameModeBase()
 {
@@ -16,6 +15,8 @@ AApplePickerGameModeBase::AApplePickerGameModeBase()
 
 void AApplePickerGameModeBase::BeginPlay()
 {
+	Super::BeginPlay();
+
 	AppleTree = GetWorld()->SpawnActor<AAppleTree>(FVector(0.f, 0.f, 2000.f), FRotator(0.f, 0.f, 0.f));
 
 	BasketPawn = Cast<ABasketPawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
@@ -28,9 +29,16 @@ void AApplePickerGameModeBase::BeginPlay()
 void AApplePickerGameModeBase::MissedApple()
 {
 	BasketPawn->RemoveBasket();
+	auto Info = NewObject<UBattleLogEntryInfo>(this, InfoClass);
+	Info->Action = TEXT("Miss");
+	Info->Missed = true;
+	OnNewAction.Broadcast(Info);
 }
 
 void AApplePickerGameModeBase::CollectedApple()
 {
-	// TODO	
+	auto Info = NewObject<UBattleLogEntryInfo>(this, InfoClass);
+	Info->Action = TEXT("Catch");
+	Info->Missed = false;
+	OnNewAction.Broadcast(Info);
 }
